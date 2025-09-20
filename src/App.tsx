@@ -168,12 +168,19 @@ const App = () => {
     const [email, setEmail] = useState('');
     const [report, setReport] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [error, setError] = useState('');
 
     const handleReport = () => {
       // Clear previous states
       setReport(null);
-      setShowConfirmation(false);
+      setError('');
+
+      // Basic input validation
+      if (!url || !email) {
+        setError('Please enter both a valid URL and an email address.');
+        return;
+      }
+
       setIsLoading(true);
 
       const analysisTime = Math.random() * 30000 + 30000;
@@ -210,11 +217,6 @@ const App = () => {
 
         setIsLoading(false);
         setReport(mockResults);
-
-        setTimeout(() => {
-          setReport(null);
-          setShowConfirmation(true);
-        }, 1500);
 
       }, analysisTime);
     };
@@ -260,12 +262,13 @@ const App = () => {
                 <button 
                   id="reportButton" 
                   onClick={handleReport} 
-                  disabled={isLoading}
-                  className={`mt-8 w-full md:w-auto text-white font-semibold py-4 px-12 rounded-full shadow-lg transition-all duration-300 transform ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 hover:opacity-90'}`}
+                  disabled={isLoading || !url || !email}
+                  className={`mt-8 w-full md:w-auto text-white font-semibold py-4 px-12 rounded-full shadow-lg transition-all duration-300 transform ${isLoading || !url || !email ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 hover:opacity-90'}`}
                   style={{ background: 'linear-gradient(135deg, #EA580B, #FB923C)' }}
                 >
                     {isLoading ? 'Analyzing...' : 'Get Report'}
                 </button>
+                {error && <p className="mt-4 text-red-400 font-semibold">{error}</p>}
             </div>
 
             {isLoading && (
@@ -276,6 +279,7 @@ const App = () => {
             
             {report && (
               <div className="mt-12 text-left bg-gray-800/60 text-white p-8 rounded-2xl shadow-2xl border border-gray-700">
+                <p className="text-lg font-semibold text-center text-orange-400 mb-4">Analysis Complete!</p>
                 <h3 className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Website Analysis Report</h3>
                 <div id="score" className="mb-4 text-center text-lg font-semibold">
                   <p className="text-3xl font-bold text-center mb-6">Total Site Score: <span className="text-green-500">{report.totalScore}/100</span></p>
@@ -302,12 +306,6 @@ const App = () => {
                       {report.suggestions.map((suggestion, index) => <li key={index}>{suggestion}</li>)}
                   </ul>
                 </div>
-              </div>
-            )}
-
-            {showConfirmation && (
-              <div id="confirmation" className="mt-8 text-center bg-gray-800/60 text-white p-8 rounded-2xl shadow-2xl border border-gray-700">
-                  <p className="text-lg font-semibold text-gray-300">your copy has been sent to your Ai consultant for review prior to your receipt</p>
               </div>
             )}
         </div>
