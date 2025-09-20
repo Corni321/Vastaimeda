@@ -6,6 +6,20 @@ const App = () => {
   const [currentPage, setCurrentPage] = useState('home');
   const [showSEOModal, setShowSEOModal] = useState(false);
 
+  // Centralized navigation handler
+  const handlePageChange = (pageName) => {
+    setCurrentPage(pageName);
+    setShowSEOModal(false);
+  };
+
+  const handleShowSEOModal = () => {
+    setShowSEOModal(true);
+  };
+  
+  const handleHideSEOModal = () => {
+    setShowSEOModal(false);
+  };
+
   // A component to display the Home Page content
   const HomePage = () => {
     return (
@@ -18,7 +32,7 @@ const App = () => {
             We help businesses unlock their potential with cutting-edge AI solutions.
           </p>
           <button
-            onClick={() => setShowSEOModal(true)}
+            onClick={handleShowSEOModal}
             className="bg-orange-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-orange-700 transition-colors"
           >
             Get Your Free AI Analysis
@@ -163,7 +177,7 @@ const App = () => {
   };
 
   // The SEO Tool Page component
-  const SEOPage = ({ onClose }) => {
+  const SEOPage = () => {
     const [url, setUrl] = useState('');
     const [email, setEmail] = useState('');
     const [report, setReport] = useState(null);
@@ -313,6 +327,120 @@ const App = () => {
     );
   };
 
+  // The Consultation Page component
+  const ConsultationPage = () => {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [service, setService] = useState('');
+    const [message, setMessage] = useState('');
+    const [status, setStatus] = useState(''); // 'success', 'error', 'submitting'
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      setStatus('submitting');
+      
+      // Basic validation
+      if (!name || !email || !service || !message) {
+        setStatus('error');
+        return;
+      }
+      
+      // Simulate API call
+      setTimeout(() => {
+        console.log("Form Submitted:", { name, email, service, message });
+        setStatus('success');
+        setName('');
+        setEmail('');
+        setService('');
+        setMessage('');
+      }, 2000);
+    };
+
+    return (
+      <section className="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-12 md:py-20 font-sans min-h-screen">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto bg-gray-800/60 p-8 rounded-2xl shadow-2xl border border-gray-700">
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-center">Request a Free Consultation</h2>
+            <p className="text-lg text-gray-400 mb-8 text-center">
+              Fill out the form below to get in touch with an AI expert. We'll help you find the perfect solution.
+            </p>
+
+            {status === 'success' ? (
+              <div className="text-center p-8 bg-green-500/20 rounded-xl">
+                <CheckCircle size={48} className="mx-auto text-green-400 mb-4" />
+                <h3 className="text-2xl font-bold text-green-300">Success!</h3>
+                <p className="text-green-200">Thank you for your request. We will be in touch shortly.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-300">Full Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="mt-1 block w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+                    placeholder="Jane Doe"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-300">Email Address</label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="mt-1 block w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+                    placeholder="you@example.com"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="service" className="block text-sm font-medium text-gray-300">Service of Interest</label>
+                  <select
+                    id="service"
+                    value={service}
+                    onChange={(e) => setService(e.target.value)}
+                    className="mt-1 block w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+                  >
+                    <option value="" disabled>Select a service</option>
+                    <option value="AI Strategy Consulting">AI Strategy Consulting</option>
+                    <option value="Machine Learning Implementation">Machine Learning Implementation</option>
+                    <option value="Business Process Automation">Business Process Automation</option>
+                    <option value="SEO Analysis & Optimization">SEO Analysis & Optimization</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-300">Your Message</label>
+                  <textarea
+                    id="message"
+                    rows={4}
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="mt-1 block w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+                    placeholder="Tell us about your project or questions..."
+                  ></textarea>
+                </div>
+                {status === 'error' && (
+                  <p className="text-red-400 text-center">Please fill out all fields.</p>
+                )}
+                <button
+                  type="submit"
+                  disabled={status === 'submitting'}
+                  className={`w-full text-white font-semibold py-4 px-12 rounded-full shadow-lg transition-all duration-300 transform ${status === 'submitting' ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 hover:opacity-90'}`}
+                  style={{ background: 'linear-gradient(135deg, #EA580B, #FB923C)' }}
+                >
+                  {status === 'submitting' ? 'Submitting...' : 'Submit Request'}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
   // Modal component to display content on top of the page
   const Modal = ({ children, onClose }) => {
     return (
@@ -338,7 +466,7 @@ const App = () => {
         <header className="bg-white shadow-sm sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
-              <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); }} className="flex items-center">
+              <a href="#" onClick={(e) => { e.preventDefault(); handlePageChange('home'); }} className="flex items-center">
                 <img
                   src="/vast-ai-media-logo.png"
                   alt="VAST AI Media"
@@ -348,30 +476,31 @@ const App = () => {
               <nav className="hidden md:flex space-x-8">
                 <a
                   href="#"
-                  onClick={(e) => { e.preventDefault(); setCurrentPage('home'); }}
+                  onClick={(e) => { e.preventDefault(); handlePageChange('home'); }}
                   className="text-gray-700 hover:text-orange-600 transition-colors"
                 >
                   Home
                 </a>
                 <a
                   href="#"
-                  onClick={(e) => { e.preventDefault(); setShowSEOModal(true); }}
+                  onClick={(e) => { e.preventDefault(); handleShowSEOModal(); }}
                   className="text-gray-700 hover:text-orange-600 transition-colors"
                 >
                   SEO Tool
                 </a>
                 <a
                   href="#"
-                  onClick={(e) => { e.preventDefault(); setCurrentPage('about'); }}
+                  onClick={(e) => { e.preventDefault(); handlePageChange('consultation'); }}
+                  className="text-gray-700 hover:text-orange-600 transition-colors"
+                >
+                  Get a Consultation
+                </a>
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); handlePageChange('about'); }}
                   className="text-gray-700 hover:text-orange-600 transition-colors"
                 >
                   About
-                </a>
-                <a
-                  href="#contact"
-                  className="text-gray-700 hover:text-orange-600 transition-colors"
-                >
-                  Contact
                 </a>
               </nav>
             </div>
@@ -420,9 +549,6 @@ const App = () => {
             </div>
           </div>
         </footer>
-
-        {/* Chatbot Widget */}
-        <script src="https://www.buildmyagent.io/widget/689e2bd0beb9977422571a04/widget-professional.js?widgetId=689e2bd0beb9977422571a04"></script>
       </div>
     );
   };
@@ -433,6 +559,8 @@ const App = () => {
         return <HomePage />;
       case 'about':
         return <AboutPage />;
+      case 'consultation':
+        return <ConsultationPage />;
       default:
         return <HomePage />;
     }
@@ -442,7 +570,7 @@ const App = () => {
     <Layout>
       {renderPage()}
       {showSEOModal && (
-        <Modal onClose={() => setShowSEOModal(false)}>
+        <Modal onClose={handleHideSEOModal}>
           <SEOPage />
         </Modal>
       )}
