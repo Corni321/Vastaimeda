@@ -1,536 +1,381 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VastaAI</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* This style hides the body content to prevent a "flash" of old/blank content */
-        body {
-            display: none;
-        }
-    </style>
-</head>
-<body class="bg-gray-50 font-sans">
-    <div id="root"></div>
+import React, { useState } from 'react';
+import { Users, Target, Award, TrendingUp, CheckCircle, Star, Search, Home } from 'lucide-react';
 
-    <script type="module">
-        import React, { useState, useEffect } from 'https://esm.sh/react@18';
-        import ReactDOM from 'https://esm.sh/react-dom@18/client';
-        import * as LucideReact from 'https://esm.sh/lucide-react@0.263.0';
+// This is a single-file implementation, so we will use Tailwind classes directly.
 
-        const { Users, Target, Award, TrendingUp, CheckCircle, Star, Menu, X, Rocket, Briefcase, Mail } = LucideReact;
+const App = () => {
+  const [currentPage, setCurrentPage] = useState('home');
 
-        const Header = ({ currentPage, setCurrentPage }) => {
-            const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navItems = [
+    { name: 'Home', page: 'home', icon: Home },
+    { name: 'About', page: 'about', icon: Users },
+    { name: 'SEO Tool', page: 'seo-tool', icon: Search }
+  ];
 
-            const navigationItems = [
-                { name: 'Home', path: 'home' },
-                { name: 'About', path: 'about' },
-                { name: 'Team', path: 'team' },
-                { name: 'Contact', path: 'contact' },
-            ];
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'home':
+        return <HomePage />;
+      case 'about':
+        return <AboutPage />;
+      case 'seo-tool':
+        return <SEOToolPage />;
+      default:
+        return <HomePage />;
+    }
+  };
 
-            const handleNavClick = (e, path) => {
-                e.preventDefault();
-                setCurrentPage(path);
-                setIsMenuOpen(false);
-            };
+  return (
+    <div className="min-h-screen bg-gray-50 font-sans antialiased">
+      {/* Header */}
+      <header className="bg-white shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex items-center justify-between h-16">
+            <h1 className="text-2xl font-bold text-gray-900">VastaiMedia</h1>
+            <div className="flex space-x-4">
+              {navItems.map((item) => (
+                <button
+                  key={item.name}
+                  onClick={() => setCurrentPage(item.page)}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-md font-medium transition-colors duration-200 
+                    ${currentPage === item.page ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                >
+                  <item.icon className="h-5 w-5" />
+                  <span>{item.name}</span>
+                </button>
+              ))}
+            </div>
+          </nav>
+        </div>
+      </header>
 
-            return (
-                <header className="bg-white shadow-md rounded-b-xl px-4 py-3 flex items-center justify-between sticky top-0 z-50">
-                    <div className="flex items-center">
-                        <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="text-2xl font-bold text-gray-800">
-                            VastaAI
-                        </a>
-                    </div>
-                    <nav className="hidden md:flex items-center space-x-6">
-                        {navigationItems.map(item => (
-                            <a
-                                key={item.path}
-                                href={`#${item.path}`}
-                                onClick={(e) => handleNavClick(e, item.path)}
-                                className={`text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium ${
-                                    currentPage === item.path ? 'text-blue-600 font-semibold' : ''
-                                }`}
-                            >
-                                {item.name}
-                            </a>
-                        ))}
-                    </nav>
-                    <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-gray-600 hover:text-blue-600">
-                        {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-                    </button>
-                    {isMenuOpen && (
-                        <div className="absolute top-full left-0 right-0 bg-white shadow-lg md:hidden">
-                            <nav className="flex flex-col p-4 space-y-2">
-                                {navigationItems.map(item => (
-                                    <a
-                                        key={item.path}
-                                        href={`#${item.path}`}
-                                        onClick={(e) => handleNavClick(e, item.path)}
-                                        className="text-gray-700 hover:bg-gray-100 p-2 rounded-lg"
-                                    >
-                                        {item.name}
-                                    </a>
-                                ))}
-                            </nav>
-                        </div>
-                    )}
-                </header>
-            );
-        };
+      {/* Page Content */}
+      <main className="pt-8">
+        {renderPage()}
+      </main>
+    </div>
+  );
+};
 
-        const HomePage = () => (
-            <section className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-8">
-                <div className="text-center max-w-4xl">
-                    <h1 className="text-5xl md:text-7xl font-bold text-gray-900 leading-tight mb-4 animate-fade-in-up">
-                        Unlocking AI for Small Businesses
-                    </h1>
-                    <p className="text-lg md:text-xl text-gray-600 mb-8 animate-fade-in-up delay-200">
-                        We provide tailored, impactful AI solutions that drive real results. From automation to customer engagement, we make AI simple and accessible.
-                    </p>
-                    <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in-up delay-400">
-                        <a href="#about" className="bg-blue-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition duration-300">
-                            Learn More
-                        </a>
-                        <a href="#contact" className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-full shadow-lg border border-blue-600 hover:bg-blue-50 transition duration-300">
-                            Get a Consultation
-                        </a>
-                    </div>
+const HomePage = () => {
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="text-center">
+        <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
+          Welcome to VastaiMedia
+        </h2>
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+          Your partner in digital growth. Explore our solutions for AI, SEO, and more.
+        </p>
+        <button
+          onClick={() => console.log("Learn more clicked!")}
+          className="bg-blue-600 text-white px-8 py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-colors duration-300"
+        >
+          Learn More
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const SEOToolPage = () => {
+  const [url, setUrl] = useState('');
+  const [results, setResults] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const analyzeSEO = async () => {
+    if (!url) {
+      console.log("Please enter a URL.");
+      return;
+    }
+
+    setLoading(true);
+    setResults(null);
+
+    // Simulate an API call with a short delay to prevent a long loading state
+    setTimeout(() => {
+      const mockResults = {
+        title: "VastaiMedia - Your Digital Growth Partner",
+        metaDescription: "Providing AI-driven solutions and expert SEO services to boost your business.",
+        keywords: "AI, SEO, marketing, business, digital, growth",
+        score: Math.floor(Math.random() * 100)
+      };
+      setResults(mockResults);
+      setLoading(false);
+    }, 1500);
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-white rounded-xl shadow-lg">
+      <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">SEO Analyzer Tool</h2>
+      <p className="text-gray-600 mb-8 text-center">
+        Enter a URL to get an instant analysis of its key SEO elements.
+      </p>
+
+      <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+        <input
+          type="text"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="Enter website URL (e.g., https://vastaimedia.com)"
+          className="flex-grow w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+        />
+        <button
+          onClick={analyzeSEO}
+          disabled={loading}
+          className="w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          {loading ? 'Analyzing...' : 'Analyze'}
+        </button>
+      </div>
+
+      {loading && (
+        <div className="flex justify-center items-center mt-8">
+          <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4 animate-spin"></div>
+        </div>
+      )}
+
+      {results && (
+        <div className="mt-12 bg-gray-50 p-8 rounded-lg">
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">Analysis Results</h3>
+          <div className="space-y-4">
+            <p className="text-gray-700">
+              <span className="font-semibold text-gray-900">SEO Score:</span> {results.score}/100
+            </p>
+            <p className="text-gray-700">
+              <span className="font-semibold text-gray-900">Title:</span> {results.title}
+            </p>
+            <p className="text-gray-700">
+              <span className="font-semibold text-gray-900">Meta Description:</span> {results.metaDescription}
+            </p>
+            <p className="text-gray-700">
+              <span className="font-semibold text-gray-900">Keywords:</span> {results.keywords}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const AboutPage = () => {
+  const values = [
+    {
+      icon: <Target className="h-8 w-8" />,
+      title: "Business-First Approach",
+      description: "Every solution is designed specifically for small and medium businesses, not enterprise systems scaled down."
+    },
+    {
+      icon: <TrendingUp className="h-8 w-8" />,
+      title: "Measurable Results",
+      description: "We're obsessed with ROI. Every implementation includes clear metrics and guaranteed performance improvements."
+    },
+    {
+      icon: <Users className="h-8 w-8" />,
+      title: "Human-Centered AI",
+      description: "AI should enhance human capabilities, not replace them. We focus on tools that empower your team."
+    },
+    {
+      icon: <Award className="h-8 w-8" />,
+      title: "Transparent Partnership",
+      description: "No hidden costs, no vendor lock-in. We succeed when our clients succeed, period."
+    }
+  ];
+
+  const achievements = [
+    { metric: "500+", label: "Businesses Transformed" },
+    { metric: "$50M+", label: "Client Revenue Generated" },
+    { metric: "451%", label: "Average ROI Achieved" },
+    { metric: "93%", label: "Client Retention Rate" }
+  ];
+
+  const testimonials = [
+    {
+      quote: "SmartBusiness AI didn't just implement tools - they transformed how we think about customer engagement. Our revenue increased 340% in the first year.",
+      author: "Maria Gonzalez",
+      company: "Local Fitness Studio",
+      role: "Owner"
+    },
+    {
+      quote: "The ROI was immediate. Within 3 months, our AI chatbot was handling 80% of customer inquiries and generating more leads than our entire sales team.",
+      author: "James Wilson",
+      company: "Tech Repair Services",
+      role: "Founder"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-50 to-indigo-100 pt-20 pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+              Empowering Small Businesses
+              <span className="text-blue-600 block">with AI Excellence</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              Founded by former small business owners who understand your challenges,
+              we're dedicated to making enterprise-level AI accessible and profitable for businesses.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Story */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                Our Story
+              </h2>
+              <div className="space-y-4 text-gray-600">
+                <p>
+                  SmartBusiness AI was born from frustration. As small business owners ourselves,
+                  we watched enterprise companies gain massive advantages from AI while businesses were
+                  left behind due to cost, complexity, and lack of specialized expertise.
+                </p>
+                <p>
+                  In 2022, our founders—former Google AI researchers and successful small business
+                  owners—decided to bridge this gap. We created the first AI consulting firm
+                  designed exclusively for small and medium businesses.
+                </p>
+                <p>
+                  Today, we've helped over 500 businesses implement AI solutions that deliver measurable
+                  results. Our clients achieve an average ROI of 451% within their first year,
+                  proving that effective AI isn't just for Fortune 500 companies.
+                </p>
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-xl p-8">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Our Mission</h3>
+              <p className="text-gray-600 mb-6">
+                To democratize AI for small businesses by providing enterprise-level solutions
+                at business-friendly prices, with guaranteed ROI and ongoing support.
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                {achievements.map((achievement, index) => (
+                  <div key={index} className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">{achievement.metric}</div>
+                    <div className="text-sm text-gray-600">{achievement.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Values */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              What Drives Us
+            </h2>
+            <p className="text-xl text-gray-600">
+              Our core values shape every client interaction and solution we deliver
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {values.map((value, index) => (
+              <div key={index} className="bg-white rounded-xl p-6 text-center shadow-sm">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4 text-blue-600">
+                  {value.icon}
                 </div>
-            </section>
-        );
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{value.title}</h3>
+                <p className="text-gray-600">{value.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        const AboutPage = () => {
-            const values = [
-                {
-                    icon: <Target className="h-8 w-8" />,
-                    title: "Business-First Approach",
-                    description: "Every solution is designed specifically for small and medium businesses, not enterprise systems scaled down."
-                },
-                {
-                    icon: <TrendingUp className="h-8 w-8" />,
-                    title: "Measurable Results",
-                    description: "We're obsessed with ROI. Every implementation includes clear metrics and guaranteed performance improvements."
-                },
-                {
-                    icon: <Users className="h-8 w-8" />,
-                    title: "Human-Centered AI",
-                    description: "AI should enhance human capabilities, not replace them. We focus on tools that empower your team."
-                },
-                {
-                    icon: <Award className="h-8 w-8" />,
-                    title: "Transparent Partnership",
-                    description: "No hidden costs, no vendor lock-in. We succeed when our clients succeed, period."
-                }
-            ];
+      {/* Testimonials */}
+      <section className="py-16 bg-blue-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              What Our Clients Say
+            </h2>
+            <p className="text-xl text-blue-100">
+              Real feedback from real business owners
+            </p>
+          </div>
 
-            const achievements = [
-                { metric: "500+", label: "Businesses Transformed" },
-                { metric: "$50M+", label: "Client Revenue Generated" },
-                { metric: "451%", label: "Average ROI Achieved" },
-                { metric: "93%", label: "Client Retention Rate" }
-            ];
-
-            const testimonials = [
-                {
-                    quote: "SmartBusiness AI didn't just implement tools - they transformed how we think about customer engagement. Our revenue increased 340% in the first year.",
-                    author: "Maria Gonzalez",
-                    company: "Local Fitness Studio",
-                    role: "Owner"
-                },
-                {
-                    quote: "The ROI was immediate. Within 3 months, our AI chatbot was handling 80% of customer inquiries and generating more leads than our entire sales team.",
-                    author: "James Wilson",
-                    company: "Tech Repair Services",
-                    role: "Founder"
-                }
-            ];
-
-            return (
-                <div className="min-h-screen">
-                    <section className="bg-gradient-to-br from-blue-50 to-indigo-100 pt-20 pb-16">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div className="text-center">
-                                <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-                                    Empowering Small Businesses
-                                    <span className="text-blue-600 block">with AI Excellence</span>
-                                </h1>
-                                <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                                    Founded by former small business owners who understand your challenges,
-                                    we're dedicated to making enterprise-level AI accessible and profitable for businesses.
-                                </p>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section className="py-16 bg-white">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                                <div>
-                                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                                        Our Story
-                                    </h2>
-                                    <div className="space-y-4 text-gray-600">
-                                        <p>
-                                            SmartBusiness AI was born from frustration. As small business owners ourselves,
-                                            we watched enterprise companies gain massive advantages from AI while businesses were
-                                            left behind due to cost, complexity, and lack of specialized expertise.
-                                        </p>
-                                        <p>
-                                            In 2022, our founders—former Google AI researchers and successful small business
-                                            owners—decided to bridge this gap. We created the first AI consulting firm
-                                            designed exclusively for small and medium businesses.
-                                        </p>
-                                        <p>
-                                            Today, we've helped over 500 businesses implement AI solutions that deliver measurable
-                                            results. Our clients achieve an average ROI of 451% within their first year,
-                                            proving that effective AI isn't just for Fortune 500 companies.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="bg-gray-50 rounded-xl p-8">
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-6">Our Mission</h3>
-                                    <p className="text-gray-600 mb-6">
-                                        To democratize AI for small businesses by providing enterprise-level solutions
-                                        at business-friendly prices, with guaranteed ROI and ongoing support.
-                                    </p>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        {achievements.map((achievement, index) => (
-                                            <div key={index} className="text-center">
-                                                <div className="text-2xl font-bold text-blue-600">{achievement.metric}</div>
-                                                <div className="text-sm text-gray-600">{achievement.label}</div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section className="py-16 bg-gray-50">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div className="text-center mb-12">
-                                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                                    What Drives Us
-                                </h2>
-                                <p className="text-xl text-gray-600">
-                                    Our core values shape every client interaction and solution we deliver
-                                </p>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                                {values.map((value, index) => (
-                                    <div key={index} className="bg-white rounded-xl p-6 text-center shadow-sm">
-                                        <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4 text-blue-600">
-                                            {value.icon}
-                                        </div>
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-3">{value.title}</h3>
-                                        <p className="text-gray-600">{value.description}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-
-                    <section className="py-16 bg-blue-600">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div className="text-center mb-12">
-                                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                                    What Our Clients Say
-                                </h2>
-                                <p className="text-xl text-blue-100">
-                                    Real feedback from real business owners
-                                </p>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                {testimonials.map((testimonial, index) => (
-                                    <div key={index} className="bg-white rounded-xl p-8">
-                                        <div className="flex items-center mb-4">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                                            ))}
-                                        </div>
-                                        <p className="text-gray-700 mb-6 italic">
-                                            "{testimonial.quote}"
-                                        </p>
-                                        <div>
-                                            <div className="font-semibold text-gray-900">{testimonial.author}</div>
-                                            <div className="text-sm text-gray-600">{testimonial.role}, {testimonial.company}</div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-
-                    <section className="py-16 bg-white">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div className="text-center mb-12">
-                                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                                    Why Small Businesses Choose Us
-                                </h2>
-                                <p className="text-xl text-gray-600">
-                                    We're not just consultants—we're your partners in AI transformation
-                                </p>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                <div className="text-center">
-                                    <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                                        <CheckCircle className="h-8 w-8 text-green-600" />
-                                    </div>
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Business Expertise</h3>
-                                    <p className="text-gray-600">
-                                        We understand small business challenges because we've been there.
-                                        Our solutions are built for your reality, not enterprise fantasies.
-                                    </p>
-                                </div>
-
-                                <div className="text-center">
-                                    <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                                        <TrendingUp className="h-8 w-8 text-blue-600" />
-                                    </div>
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Guaranteed ROI</h3>
-                                    <p className="text-gray-600">
-                                        We're so confident in our results that we guarantee measurable ROI
-                                        within 6 months or refund your investment.
-                                    </p>
-                                </div>
-
-                                <div className="text-center">
-                                    <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
-                                        <Users className="h-8 w-8 text-purple-600" />
-                                    </div>
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Ongoing Support</h3>
-                                    <p className="text-gray-600">
-                                        Implementation is just the beginning. We provide continuous optimization,
-                                        training, and support to ensure long-term success.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white rounded-xl p-8">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
                 </div>
-            );
-        };
-
-        const TeamPage = () => (
-            <section className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
-                <div className="max-w-7xl mx-auto text-center">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                        Meet Our Expert Team
-                    </h2>
-                    <p className="text-xl text-gray-600 mb-12">
-                        Former entrepreneurs and AI researchers dedicated to your success
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center">
-                            <div className="bg-blue-100 rounded-full w-24 h-24 flex items-center justify-center text-blue-600 text-4xl font-bold mb-4">
-                                SC
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900">Sarah Chen</h3>
-                            <p className="text-blue-600 font-semibold mb-2">Founder & CEO</p>
-                            <p className="text-gray-600 text-sm mb-4">
-                                Former Google AI researcher with 15+ years in machine learning and business automation. Led AI implementations for 500+ businesses.
-                            </p>
-                            <div className="flex flex-wrap justify-center gap-2">
-                                <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">AI Strategy</span>
-                                <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Machine Learning</span>
-                                <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Business Automation</span>
-                            </div>
-                        </div>
-                        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center">
-                            <div className="bg-blue-100 rounded-full w-24 h-24 flex items-center justify-center text-blue-600 text-4xl font-bold mb-4">
-                                MR
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900">Michael Rodriguez</h3>
-                            <p className="text-blue-600 font-semibold mb-2">Chief Technology Officer</p>
-                            <p className="text-gray-600 text-sm mb-4">
-                                Ex-Microsoft engineer specializing in AI integration and scalable systems. Expert in making complex AI accessible to small businesses.
-                            </p>
-                            <div className="flex flex-wrap justify-center gap-2">
-                                <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">AI Development</span>
-                                <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">System Integration</span>
-                                <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Technical Architecture</span>
-                            </div>
-                        </div>
-                        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center">
-                            <div className="bg-blue-100 rounded-full w-24 h-24 flex items-center justify-center text-blue-600 text-4xl font-bold mb-4">
-                                JP
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900">Jennifer Park</h3>
-                            <p className="text-blue-600 font-semibold mb-2">Head of Client Success</p>
-                            <p className="text-gray-600 text-sm mb-4">
-                                Former small business owner who transformed her company with AI. Now helps other businesses achieve similar success.
-                            </p>
-                            <div className="flex flex-wrap justify-center gap-2">
-                                <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Client Relations</span>
-                                <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">ROI Optimization</span>
-                                <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Training & Support</span>
-                            </div>
-                        </div>
-                        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center">
-                            <div className="bg-blue-100 rounded-full w-24 h-24 flex items-center justify-center text-blue-600 text-4xl font-bold mb-4">
-                                DT
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900">David Thompson</h3>
-                            <p className="text-blue-600 font-semibold mb-2">Senior AI Consultant</p>
-                            <p className="text-gray-600 text-sm mb-4">
-                                10+ years in marketing automation and customer experience optimization. Specialist in chatbots and lead generation systems.
-                            </p>
-                            <div className="flex flex-wrap justify-center gap-2">
-                                <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Marketing Automation</span>
-                                <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Customer Experience</span>
-                                <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Lead Generation</span>
-                            </div>
-                        </div>
-                    </div>
+                <p className="text-gray-700 mb-6 italic">
+                  "{testimonial.quote}"
+                </p>
+                <div>
+                  <div className="font-semibold text-gray-900">{testimonial.author}</div>
+                  <div className="text-sm text-gray-600">{testimonial.role}, {testimonial.company}</div>
                 </div>
-            </section>
-        );
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        const ContactPage = () => (
-            <section className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 bg-white">
-                <div className="max-w-xl mx-auto bg-gray-50 rounded-xl shadow-lg p-8">
-                    <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
-                        Book Your Consultation
-                    </h2>
-                    <p className="text-center text-gray-600 mb-8">
-                        Fill out the form below and we'll schedule your free consultation
-                    </p>
-                    <form className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Full Name *</label>
-                                <input type="text" id="fullName" name="fullName" placeholder="Your full name" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            </div>
-                            <div className="space-y-2">
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address *</label>
-                                <input type="email" id="email" name="email" placeholder="your@email.com" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            </div>
-                            <div className="space-y-2">
-                                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number *</label>
-                                <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            </div>
-                            <div className="space-y-2">
-                                <label htmlFor="company" className="block text-sm font-medium text-gray-700">Company Name</label>
-                                <input type="text" id="company" name="company" placeholder="Your company name" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <label htmlFor="primaryInterest" className="block text-sm font-medium text-gray-700">Primary Interest *</label>
-                            <select id="primaryInterest" name="primaryInterest" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option>Select service area</option>
-                            </select>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <label htmlFor="consultationType" className="block text-sm font-medium text-gray-700">Consultation Type *</label>
-                                <select id="consultationType" name="consultationType" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option>Select type</option>
-                                </select>
-                            </div>
-                            <div className="space-y-2">
-                                <label htmlFor="date" className="block text-sm font-medium text-gray-700">Preferred Date *</label>
-                                <input type="date" id="date" name="date" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <label htmlFor="time" className="block text-sm font-medium text-gray-700">Preferred Time *</label>
-                            <select id="time" name="time" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option>Select preferred time</option>
-                            </select>
-                        </div>
-                        <div className="space-y-2">
-                            <label htmlFor="additionalInfo" className="block text-sm font-medium text-gray-700">Additional Information</label>
-                            <textarea id="additionalInfo" name="additionalInfo" rows="4" placeholder="Tell us about your current challenges and goals..." className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                        </div>
-                        <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
-                            Book Free Consultation
-                        </button>
-                    </form>
-                </div>
-            </section>
-        );
+      {/* Why Choose Us */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Why Small Businesses Choose Us
+            </h2>
+            <p className="text-xl text-gray-600">
+              We're not just consultants—we're your partners in AI transformation
+            </p>
+          </div>
 
-        const Footer = () => (
-            <footer className="bg-gray-800 text-white py-8 px-4 sm:px-6 lg:px-8 rounded-t-xl">
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
-                    <div className="text-center md:text-left mb-4 md:mb-0">
-                        <h3 className="text-xl font-bold">VastaAI</h3>
-                        <p className="text-sm text-gray-400">© 2024 All rights reserved.</p>
-                    </div>
-                    <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-8">
-                        <nav className="flex flex-wrap justify-center space-x-4">
-                            <a href="#about" className="hover:text-blue-400 transition-colors duration-200">About</a>
-                            <a href="#team" className="hover:text-blue-400 transition-colors duration-200">Team</a>
-                            <a href="#contact" className="hover:text-blue-400 transition-colors duration-200">Contact</a>
-                        </nav>
-                        <div className="flex space-x-4">
-                            <a href="#" className="hover:text-blue-400"><Users size={20} /></a>
-                            <a href="#" className="hover:text-blue-400"><Briefcase size={20} /></a>
-                            <a href="#" className="hover:text-blue-400"><Mail size={20} /></a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-        );
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                <CheckCircle className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Business Expertise</h3>
+              <p className="text-gray-600">
+                We understand small business challenges because we've been there.
+                Our solutions are built for your reality, not enterprise fantasies.
+              </p>
+            </div>
 
-        const App = () => {
-            const [currentPage, setCurrentPage] = useState('home');
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                <TrendingUp className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Guaranteed ROI</h3>
+              <p className="text-gray-600">
+                We're so confident in our results that we guarantee measurable ROI
+                within 6 months or refund your investment.
+              </p>
+            </div>
 
-            useEffect(() => {
-                // Once the React app is mounted, show the body content.
-                document.body.style.display = 'block';
-            }, []);
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
+                <Users className="h-8 w-8 text-purple-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Ongoing Support</h3>
+              <p className="text-gray-600">
+                Implementation is just the beginning. We provide continuous optimization,
+                training, and support to ensure long-term success.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
 
-            const renderPage = () => {
-                switch (currentPage) {
-                    case 'home':
-                        return <HomePage />;
-                    case 'about':
-                        return <AboutPage />;
-                    case 'team':
-                        return <TeamPage />;
-                    case 'contact':
-                        return <ContactPage />;
-                    default:
-                        return <HomePage />;
-                }
-            };
-
-            return (
-                <div className="min-h-screen font-sans bg-gray-50 flex flex-col">
-                    <style>
-                        {`
-                            @keyframes fadeIn {
-                                from { opacity: 0; transform: translateY(20px); }
-                                to { opacity: 1; transform: translateY(0); }
-                            }
-                            .animate-fade-in-up {
-                                animation: fadeIn 0.8s ease-out forwards;
-                            }
-                            .delay-200 { animation-delay: 0.2s; }
-                            .delay-400 { animation-delay: 0.4s; }
-                        `}
-                    </style>
-                    <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
-                    <main className="flex-grow">
-                        {renderPage()}
-                    </main>
-                    <Footer />
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-
-    </script>
-</body>
-</html>
+export default App;
