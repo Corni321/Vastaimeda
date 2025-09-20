@@ -6,12 +6,18 @@
     <title>VastaAI</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* This style hides the body content to prevent a "flash" of old/blank content */
+        body {
+            display: none;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 font-sans">
     <div id="root"></div>
 
     <script type="module">
-        import React, { useState } from 'https://esm.sh/react@18';
+        import React, { useState, useEffect } from 'https://esm.sh/react@18';
         import ReactDOM from 'https://esm.sh/react-dom@18/client';
         import * as LucideReact from 'https://esm.sh/lucide-react@0.263.0';
 
@@ -477,6 +483,11 @@
 
         const App = () => {
             const [currentPage, setCurrentPage] = useState('home');
+
+            useEffect(() => {
+                // Once the React app is mounted, show the body content.
+                document.body.style.display = 'block';
+            }, []);
 
             const renderPage = () => {
                 switch (currentPage) {
