@@ -1,23 +1,13 @@
 import React, { useState } from 'react';
-import { Users, Target, Award, TrendingUp, CheckCircle, Star, X } from 'lucide-react';
+import { Users, Target, Award, TrendingUp, CheckCircle, Star } from 'lucide-react';
 
 // The main App component that handles routing
 const App = () => {
   const [currentPage, setCurrentPage] = useState('home');
-  const [showSEOModal, setShowSEOModal] = useState(false);
 
   // Centralized navigation handler
   const handlePageChange = (pageName) => {
     setCurrentPage(pageName);
-    setShowSEOModal(false);
-  };
-
-  const handleShowSEOModal = () => {
-    setShowSEOModal(true);
-  };
-  
-  const handleHideSEOModal = () => {
-    setShowSEOModal(false);
   };
 
   // A component to display the Home Page content
@@ -32,7 +22,7 @@ const App = () => {
             We help businesses unlock their potential with cutting-edge AI solutions.
           </p>
           <button
-            onClick={handleShowSEOModal}
+            onClick={() => handlePageChange('seo')}
             className="bg-orange-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-orange-700 transition-colors"
           >
             Get Your Free AI Analysis
@@ -441,23 +431,6 @@ const App = () => {
     );
   };
 
-  // Modal component to display content on top of the page
-  const Modal = ({ children, onClose }) => {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 backdrop-blur-sm">
-        <div className="relative w-full h-full max-w-6xl max-h-[90vh] overflow-y-auto bg-gray-900 rounded-xl shadow-2xl">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 p-2 text-white bg-gray-800 rounded-full hover:bg-gray-700 transition-colors z-50"
-          >
-            <X size={24} />
-          </button>
-          {children}
-        </div>
-      </div>
-    );
-  };
-
   // The Layout component wraps the entire application
   const Layout = ({ children }) => {
     return (
@@ -483,7 +456,7 @@ const App = () => {
                 </a>
                 <a
                   href="#"
-                  onClick={(e) => { e.preventDefault(); handleShowSEOModal(); }}
+                  onClick={(e) => { e.preventDefault(); handlePageChange('seo'); }}
                   className="text-gray-700 hover:text-orange-600 transition-colors"
                 >
                   SEO Tool
@@ -561,21 +534,14 @@ const App = () => {
         return <AboutPage />;
       case 'consultation':
         return <ConsultationPage />;
+      case 'seo':
+        return <SEOPage />;
       default:
         return <HomePage />;
     }
   };
 
-  return (
-    <Layout>
-      {renderPage()}
-      {showSEOModal && (
-        <Modal onClose={handleHideSEOModal}>
-          <SEOPage />
-        </Modal>
-      )}
-    </Layout>
-  );
+  return <Layout>{renderPage()}</Layout>;
 };
 
 export default App;
