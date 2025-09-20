@@ -1,530 +1,471 @@
 import React, { useState } from 'react';
-import { Users, Target, Award, TrendingUp, CheckCircle, Star } from 'lucide-react';
+import { Users, Target, Award, TrendingUp, CheckCircle, Star, Menu, X, Rocket, Briefcase, Mail } from 'lucide-react';
 
-// The main App component that handles routing
-const App = () => {
-  const [currentPage, setCurrentPage] = useState('home');
+const Header = ({ currentPage, setCurrentPage }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Centralized navigation handler
-  const handlePageChange = (pageName) => {
-    setCurrentPage(pageName);
+  const navigationItems = [
+    { name: 'Home', path: 'home' },
+    { name: 'About', path: 'about' },
+    { name: 'Team', path: 'team' },
+    { name: 'Contact', path: 'contact' },
+  ];
+
+  const handleNavClick = (e, path) => {
+    e.preventDefault();
+    setCurrentPage(path);
+    setIsMenuOpen(false);
   };
 
-  // A component to display the Home Page content
-  const HomePage = () => {
-    return (
-      <div className="relative py-20 px-4 sm:px-6 lg:px-8 text-center bg-gray-100 min-h-screen">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
-            Welcome to VAST AI Media
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            We help businesses unlock their potential with cutting-edge AI solutions.
-          </p>
-          <button
-            onClick={() => handlePageChange('seo')}
-            className="bg-orange-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-orange-700 transition-colors"
+  return (
+    <header className="bg-white shadow-md rounded-b-xl px-4 py-3 flex items-center justify-between sticky top-0 z-50">
+      <div className="flex items-center">
+        <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="text-2xl font-bold text-gray-800">
+          VastaAI
+        </a>
+      </div>
+      <nav className="hidden md:flex items-center space-x-6">
+        {navigationItems.map(item => (
+          <a
+            key={item.path}
+            href={`#${item.path}`}
+            onClick={(e) => handleNavClick(e, item.path)}
+            className={`text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium ${
+              currentPage === item.path ? 'text-blue-600 font-semibold' : ''
+            }`}
           >
-            Get Your Free AI Analysis
-          </button>
-        </div>
-      </div>
-    );
-  };
-
-  // The AboutPage component from the Canvas
-  const AboutPage = () => {
-    const values = [
-      {
-        icon: <Target className="h-8 w-8" />,
-        title: "Business-First Approach",
-        description: "Every solution is designed specifically for small and medium businesses, not enterprise systems scaled down."
-      },
-      {
-        icon: <TrendingUp className="h-8 w-8" />,
-        title: "Measurable Results",
-        description: "We're obsessed with ROI. Every implementation includes clear metrics and guaranteed performance improvements."
-      },
-      {
-        icon: <Users className="h-8 w-8" />,
-        title: "Human-Centered AI",
-        description: "AI should enhance human capabilities, not replace them. We focus on tools that empower your team."
-      },
-      {
-        icon: <Award className="h-8 w-8" />,
-        title: "Transparent Partnership",
-        description: "No hidden costs, no vendor lock-in. We succeed when our clients succeed, period."
-      }
-    ]
-
-    const achievements = [
-      { metric: "500+", label: "Businesses Transformed" },
-      { metric: "$50M+", label: "Client Revenue Generated" },
-      { metric: "451%", label: "Average ROI Achieved" },
-      { metric: "93%", label: "Client Retention Rate" }
-    ]
-
-    const testimonials = [
-      {
-        quote: "SmartBusiness AI didn't just implement tools - they transformed how we think about customer engagement. Our revenue increased by 30% in the first quarter alone.",
-        author: "Jane Doe",
-        title: "CEO, Innovate Solutions",
-        avatar: "https://placehold.co/100x100/A0B9C9/000?text=JD",
-        rating: 5,
-      },
-      {
-        quote: "The ROI guarantee made the decision a no-brainer. The team was transparent, professional, and delivered every promise they made. Highly recommend.",
-        author: "John Smith",
-        title: "Founder, Apex Marketing",
-        avatar: "https://placehold.co/100x100/F0C79A/000?text=JS",
-        rating: 5,
-      },
-      {
-        quote: "Our processes were a mess. VAST AI Media came in, streamlined everything with smart automation, and gave us back countless hours. True experts in their field.",
-        author: "Emily Chen",
-        title: "Operations Manager, Global Logistics",
-        avatar: "https://placehold.co/100x100/8E89A8/000?text=EC",
-        rating: 5,
-      },
-    ];
-
-    return (
-      <div>
-        {/* Hero Section */}
-        <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
-              About VAST AI Media
-            </h1>
-            <p className="text-xl text-gray-600">
-              We are a dedicated team of AI experts and business consultants committed to helping small and medium-sized businesses thrive in the age of artificial intelligence. Our mission is to democratize powerful AI solutions, making them accessible, affordable, and actionable for everyone.
-            </p>
-          </div>
-        </section>
-
-        {/* Values Section */}
-        <section className="bg-gray-50 py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">Our Guiding Principles</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {values.map((value, index) => (
-                <div key={index} className="bg-white p-8 rounded-xl shadow-md text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-4">
-                    {value.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{value.title}</h3>
-                  <p className="text-gray-600">{value.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        
-        {/* Achievements Section */}
-        <section className="bg-white py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
-              Our Impact
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {achievements.map((item, index) => (
-                <div key={index} className="text-center">
-                  <p className="text-4xl sm:text-5xl font-extrabold text-orange-600 mb-2">{item.metric}</p>
-                  <p className="text-lg text-gray-600">{item.label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Testimonials Section */}
-        <section className="bg-gray-50 py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">What Our Clients Say</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {testimonials.map((testimonial, index) => (
-                <div key={index} className="bg-white p-8 rounded-xl shadow-md flex flex-col items-center text-center">
-                  <img
-                    src={testimonial.avatar}
-                    alt={testimonial.author}
-                    className="w-24 h-24 rounded-full mb-4"
-                  />
-                  <p className="text-gray-600 italic mb-4">"{testimonial.quote}"</p>
-                  <div className="flex text-yellow-400 mb-2">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-current" />
-                    ))}
-                  </div>
-                  <p className="font-semibold text-gray-900">{testimonial.author}</p>
-                  <p className="text-sm text-gray-500">{testimonial.title}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </div>
-    );
-  };
-
-  // The SEO Tool Page component
-  const SEOPage = () => {
-    const [url, setUrl] = useState('');
-    const [email, setEmail] = useState('');
-    const [report, setReport] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
-
-    const handleReport = () => {
-      // Clear previous states
-      setReport(null);
-      setError('');
-
-      // Basic input validation
-      if (!url || !email) {
-        setError('Please enter both a valid URL and an email address.');
-        return;
-      }
-
-      setIsLoading(true);
-
-      const analysisTime = Math.random() * 30000 + 30000;
-
-      setTimeout(() => {
-        const onPageScore = Math.floor(Math.random() * 10) + 5;
-        const contentScore = Math.floor(Math.random() * 10) + 5;
-        const imageScore = Math.floor(Math.random() * 10) + 5;
-        const mobileScore = Math.floor(Math.random() * 10) + 5;
-        const speedScore = Math.floor(Math.random() * 10) + 5;
-        const uxScore = Math.floor(Math.random() * 10) + 5;
-        
-        const totalScore = onPageScore + contentScore + imageScore + mobileScore + speedScore + uxScore;
-
-        const mockResults = {
-            onPageScore,
-            contentScore,
-            imageScore,
-            mobileScore,
-            speedScore,
-            uxScore,
-            totalScore,
-            issues: [
-                'Missing meta description on some pages.',
-                'Images are missing alt text.',
-                'Page loading speed is slow.'
-            ],
-            suggestions: [
-                'Add a unique and compelling meta description to all pages.',
-                'Add descriptive alt text to all images for accessibility and SEO.',
-                'Optimize image sizes and use a CDN to improve page speed.'
-            ]
-        };
-
-        setIsLoading(false);
-        setReport(mockResults);
-
-      }, analysisTime);
-    };
-
-    return (
-      <section className="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-12 md:py-20 font-sans min-h-screen">
-        <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-5xl font-extrabold mb-4">AI Website Analysis</h2>
-            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto font-light">
-                <span className="text-orange-400 font-bold">Get an instant, in-depth analysis</span> of your website's performance and discover opportunities for growth.
-            </p>
-
-            {/* What you will receive list */}
-            <h3 className="text-lg font-bold uppercase tracking-wider text-orange-400 mt-8 mb-4">What you will receive</h3>
-            <div className="flex flex-wrap justify-center gap-4 text-white text-lg font-medium mb-12 max-w-4xl mx-auto">
-                <span className="px-6 py-3 bg-gray-700/50 backdrop-blur-sm rounded-full transition-all duration-300 transform hover:scale-105 hover:bg-orange-600/70 cursor-pointer">On-Page SEO</span>
-                <span className="px-6 py-3 bg-gray-700/50 backdrop-blur-sm rounded-full transition-all duration-300 transform hover:scale-105 hover:bg-orange-600/70 cursor-pointer">Content Quality</span>
-                <span className="px-6 py-3 bg-gray-700/50 backdrop-blur-sm rounded-full transition-all duration-300 transform hover:scale-105 hover:bg-orange-600/70 cursor-pointer">Image Optimization</span>
-                <span className="px-6 py-3 bg-gray-700/50 backdrop-blur-sm rounded-full transition-all duration-300 transform hover:scale-105 hover:bg-orange-600/70 cursor-pointer">Mobile-Friendliness</span>
-                <span className="px-6 py-3 bg-gray-700/50 backdrop-blur-sm rounded-full transition-all duration-300 transform hover:scale-105 hover:bg-orange-600/70 cursor-pointer">Page Speed</span>
-                <span className="px-6 py-3 bg-gray-700/50 backdrop-blur-sm rounded-full transition-all duration-300 transform hover:scale-105 hover:bg-orange-600/70 cursor-pointer">User Experience</span>
-            </div>
-
-            <div className="bg-gray-800/60 p-6 md:p-12 rounded-2xl shadow-2xl border border-gray-700">
-                <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
-                    <input 
-                      type="url" 
-                      id="urlInput" 
-                      placeholder="Enter your website URL" 
-                      value={url} 
-                      onChange={(e) => setUrl(e.target.value)} 
-                      className="w-full md:w-1/2 p-4 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-shadow duration-300"
-                    />
-                    <input 
-                      type="email" 
-                      id="emailInput" 
-                      placeholder="Enter your email for the report" 
-                      value={email} 
-                      onChange={(e) => setEmail(e.target.value)} 
-                      className="w-full md:w-1/2 p-4 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-shadow duration-300"
-                    />
-                </div>
-                <button 
-                  id="reportButton" 
-                  onClick={handleReport} 
-                  disabled={isLoading || !url || !email}
-                  className={`mt-8 w-full md:w-auto text-white font-semibold py-4 px-12 rounded-full shadow-lg transition-all duration-300 transform ${isLoading || !url || !email ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 hover:opacity-90'}`}
-                  style={{ background: 'linear-gradient(135deg, #EA580B, #FB923C)' }}
-                >
-                    {isLoading ? 'Analyzing...' : 'Get Report'}
-                </button>
-                {error && <p className="mt-4 text-red-400 font-semibold">{error}</p>}
-            </div>
-
-            {isLoading && (
-              <div className="mt-12 text-center text-lg font-semibold">
-                <p className="text-lg text-center text-gray-400">Analyzing...</p>
-              </div>
-            )}
-            
-            {report && (
-              <div className="mt-12 text-left bg-gray-800/60 text-white p-8 rounded-2xl shadow-2xl border border-gray-700">
-                <p className="text-lg font-semibold text-center text-orange-400 mb-4">Analysis Complete!</p>
-                <h3 className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Website Analysis Report</h3>
-                <div id="score" className="mb-4 text-center text-lg font-semibold">
-                  <p className="text-3xl font-bold text-center mb-6">Total Site Score: <span className="text-green-500">{report.totalScore}/100</span></p>
-                </div>
-                <div id="individual-scores" className="mb-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-                      <div>On-Page SEO: <span className="font-bold text-orange-400">{report.onPageScore}/10</span></div>
-                      <div>Content Quality: <span className="font-bold text-orange-400">{report.contentScore}/10</span></div>
-                      <div>Image Optimization: <span className="font-bold text-orange-400">{report.imageScore}/10</span></div>
-                      <div>Mobile-Friendliness: <span className="font-bold text-orange-400">{report.mobileScore}/10</span></div>
-                      <div>Page Speed: <span className="font-bold text-orange-400">{report.speedScore}/10</span></div>
-                      <div>User Experience: <span className="font-bold text-orange-400">{report.uxScore}/10</span></div>
-                  </div>
-                </div>
-                <div id="issues" className="mb-4">
-                  <h4 className="text-lg font-bold mb-2">Issues Found:</h4>
-                  <ul className="list-disc list-inside space-y-2 text-gray-300">
-                      {report.issues.map((issue, index) => <li key={index}>{issue}</li>)}
-                  </ul>
-                </div>
-                <div id="suggestions" className="mb-4">
-                  <h4 className="text-lg font-bold mt-6 mb-2">Suggestions for Improvement:</h4>
-                  <ul className="list-disc list-inside space-y-2 text-gray-300">
-                      {report.suggestions.map((suggestion, index) => <li key={index}>{suggestion}</li>)}
-                  </ul>
-                </div>
-              </div>
-            )}
-        </div>
-      </section>
-    );
-  };
-
-  // The Consultation Page component
-  const ConsultationPage = () => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [service, setService] = useState('');
-    const [message, setMessage] = useState('');
-    const [status, setStatus] = useState(''); // 'success', 'error', 'submitting'
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      setStatus('submitting');
-      
-      // Basic validation
-      if (!name || !email || !service || !message) {
-        setStatus('error');
-        return;
-      }
-      
-      // Simulate API call
-      setTimeout(() => {
-        console.log("Form Submitted:", { name, email, service, message });
-        setStatus('success');
-        setName('');
-        setEmail('');
-        setService('');
-        setMessage('');
-      }, 2000);
-    };
-
-    return (
-      <section className="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-12 md:py-20 font-sans min-h-screen">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto bg-gray-800/60 p-8 rounded-2xl shadow-2xl border border-gray-700">
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-center">Request a Free Consultation</h2>
-            <p className="text-lg text-gray-400 mb-8 text-center">
-              Fill out the form below to get in touch with an AI expert. We'll help you find the perfect solution.
-            </p>
-
-            {status === 'success' ? (
-              <div className="text-center p-8 bg-green-500/20 rounded-xl">
-                <CheckCircle size={48} className="mx-auto text-green-400 mb-4" />
-                <h3 className="text-2xl font-bold text-green-300">Success!</h3>
-                <p className="text-green-200">Thank you for your request. We will be in touch shortly.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-300">Full Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="mt-1 block w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                    placeholder="Jane Doe"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-300">Email Address</label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="mt-1 block w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                    placeholder="you@example.com"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="service" className="block text-sm font-medium text-gray-300">Service of Interest</label>
-                  <select
-                    id="service"
-                    value={service}
-                    onChange={(e) => setService(e.target.value)}
-                    className="mt-1 block w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                  >
-                    <option value="" disabled>Select a service</option>
-                    <option value="AI Strategy Consulting">AI Strategy Consulting</option>
-                    <option value="Machine Learning Implementation">Machine Learning Implementation</option>
-                    <option value="Business Process Automation">Business Process Automation</option>
-                    <option value="SEO Analysis & Optimization">SEO Analysis & Optimization</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-300">Your Message</label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    className="mt-1 block w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                    placeholder="Tell us about your project or questions..."
-                  ></textarea>
-                </div>
-                {status === 'error' && (
-                  <p className="text-red-400 text-center">Please fill out all fields.</p>
-                )}
-                <button
-                  type="submit"
-                  disabled={status === 'submitting'}
-                  className={`w-full text-white font-semibold py-4 px-12 rounded-full shadow-lg transition-all duration-300 transform ${status === 'submitting' ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 hover:opacity-90'}`}
-                  style={{ background: 'linear-gradient(135deg, #EA580B, #FB923C)' }}
-                >
-                  {status === 'submitting' ? 'Submitting...' : 'Submit Request'}
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      </section>
-    );
-  };
-
-  // The Layout component wraps the entire application
-  const Layout = ({ children }) => {
-    return (
-      <div className="min-h-screen bg-white">
-        {/* Header */}
-        <header className="bg-white shadow-sm sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
-              <a href="#" onClick={(e) => { e.preventDefault(); handlePageChange('home'); }} className="flex items-center">
-                <img
-                  src="/vast-ai-media-logo.png"
-                  alt="VAST AI Media"
-                  className="h-12 w-auto"
-                />
+            {item.name}
+          </a>
+        ))}
+      </nav>
+      <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-gray-600 hover:text-blue-600">
+        {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+      </button>
+      {isMenuOpen && (
+        <div className="absolute top-full left-0 right-0 bg-white shadow-lg md:hidden">
+          <nav className="flex flex-col p-4 space-y-2">
+            {navigationItems.map(item => (
+              <a
+                key={item.path}
+                href={`#${item.path}`}
+                onClick={(e) => handleNavClick(e, item.path)}
+                className="text-gray-700 hover:bg-gray-100 p-2 rounded-lg"
+              >
+                {item.name}
               </a>
-              <nav className="hidden md:flex space-x-8">
-                <a
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); handlePageChange('home'); }}
-                  className="text-gray-700 hover:text-orange-600 transition-colors"
-                >
-                  Home
-                </a>
-                <a
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); handlePageChange('seo'); }}
-                  className="text-gray-700 hover:text-orange-600 transition-colors"
-                >
-                  SEO Tool
-                </a>
-                <a
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); handlePageChange('consultation'); }}
-                  className="text-gray-700 hover:text-orange-600 transition-colors"
-                >
-                  Get a Consultation
-                </a>
-                <a
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); handlePageChange('about'); }}
-                  className="text-gray-700 hover:text-orange-600 transition-colors"
-                >
-                  About
-                </a>
-              </nav>
-            </div>
+            ))}
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+};
+
+const HomePage = () => (
+  <section className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-8">
+    <div className="text-center max-w-4xl">
+      <h1 className="text-5xl md:text-7xl font-bold text-gray-900 leading-tight mb-4 animate-fade-in-up">
+        Unlocking AI for Small Businesses
+      </h1>
+      <p className="text-lg md:text-xl text-gray-600 mb-8 animate-fade-in-up delay-200">
+        We provide tailored, impactful AI solutions that drive real results. From automation to customer engagement, we make AI simple and accessible.
+      </p>
+      <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in-up delay-400">
+        <a href="#about" className="bg-blue-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition duration-300">
+          Learn More
+        </a>
+        <a href="#contact" className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-full shadow-lg border border-blue-600 hover:bg-blue-50 transition duration-300">
+          Get a Consultation
+        </a>
+      </div>
+    </div>
+  </section>
+);
+
+const AboutPage = () => {
+  const values = [
+    {
+      icon: <Target className="h-8 w-8" />,
+      title: "Business-First Approach",
+      description: "Every solution is designed specifically for small and medium businesses, not enterprise systems scaled down."
+    },
+    {
+      icon: <TrendingUp className="h-8 w-8" />,
+      title: "Measurable Results",
+      description: "We're obsessed with ROI. Every implementation includes clear metrics and guaranteed performance improvements."
+    },
+    {
+      icon: <Users className="h-8 w-8" />,
+      title: "Human-Centered AI",
+      description: "AI should enhance human capabilities, not replace them. We focus on tools that empower your team."
+    },
+    {
+      icon: <Award className="h-8 w-8" />,
+      title: "Transparent Partnership",
+      description: "No hidden costs, no vendor lock-in. We succeed when our clients succeed, period."
+    }
+  ];
+
+  const achievements = [
+    { metric: "500+", label: "Businesses Transformed" },
+    { metric: "$50M+", label: "Client Revenue Generated" },
+    { metric: "451%", label: "Average ROI Achieved" },
+    { metric: "93%", label: "Client Retention Rate" }
+  ];
+
+  const testimonials = [
+    {
+      quote: "SmartBusiness AI didn't just implement tools - they transformed how we think about customer engagement. Our revenue increased 340% in the first year.",
+      author: "Maria Gonzalez",
+      company: "Local Fitness Studio",
+      role: "Owner"
+    },
+    {
+      quote: "The ROI was immediate. Within 3 months, our AI chatbot was handling 80% of customer inquiries and generating more leads than our entire sales team.",
+      author: "James Wilson",
+      company: "Tech Repair Services",
+      role: "Founder"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-50 to-indigo-100 pt-20 pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+              Empowering Small Businesses
+              <span className="text-blue-600 block">with AI Excellence</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              Founded by former small business owners who understand your challenges,
+              we're dedicated to making enterprise-level AI accessible and profitable for businesses.
+            </p>
           </div>
-        </header>
+        </div>
+      </section>
 
-        {/* Main Content */}
-        <main>
-          {children}
-        </main>
-
-        {/* Footer */}
-        <footer className="bg-gray-900 text-white py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div>
-                <img
-                  src="/vast-ai-media-logo.png"
-                  alt="VAST AI Media"
-                  className="h-12 w-auto mb-4 filter brightness-0 invert"
-                />
-                <p className="text-gray-400">
-                  Professional AI consulting services for businesses. Transform your operations with cutting-edge artificial intelligence solutions.
+      {/* Our Story */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                Our Story
+              </h2>
+              <div className="space-y-4 text-gray-600">
+                <p>
+                  SmartBusiness AI was born from frustration. As small business owners ourselves,
+                  we watched enterprise companies gain massive advantages from AI while businesses were
+                  left behind due to cost, complexity, and lack of specialized expertise.
+                </p>
+                <p>
+                  In 2022, our founders—former Google AI researchers and successful small business
+                  owners—decided to bridge this gap. We created the first AI consulting firm
+                  designed exclusively for small and medium businesses.
+                </p>
+                <p>
+                  Today, we've helped over 500 businesses implement AI solutions that deliver measurable
+                  results. Our clients achieve an average ROI of 451% within their first year,
+                  proving that effective AI isn't just for Fortune 500 companies.
                 </p>
               </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Services</h3>
-                <ul className="space-y-2 text-gray-400">
-                  <li>AI Strategy Consulting</li>
-                  <li>Machine Learning Implementation</li>
-                  <li>Business Process Automation</li>
-                  <li>SEO Analysis & Optimization</li>
-                </ul>
-              </div>
-              <div id="contact">
-                <h3 className="text-lg font-semibold mb-4">Contact</h3>
-                <div className="space-y-2 text-gray-400">
-                  <p>Email: info@vastaimedia.com</p>
-                  <p>Phone: Your Phone Number Here</p>
-                  <p>Address: Your Business Address Here</p>
-                </div>
-              </div>
             </div>
-            <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-              <p>&copy; 2024 VAST AI Media. All rights reserved.</p>
+            <div className="bg-gray-50 rounded-xl p-8">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Our Mission</h3>
+              <p className="text-gray-600 mb-6">
+                To democratize AI for small businesses by providing enterprise-level solutions
+                at business-friendly prices, with guaranteed ROI and ongoing support.
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                {achievements.map((achievement, index) => (
+                  <div key={index} className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">{achievement.metric}</div>
+                    <div className="text-sm text-gray-600">{achievement.label}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </footer>
+        </div>
+      </section>
+
+      {/* Our Values */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              What Drives Us
+            </h2>
+            <p className="text-xl text-gray-600">
+              Our core values shape every client interaction and solution we deliver
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {values.map((value, index) => (
+              <div key={index} className="bg-white rounded-xl p-6 text-center shadow-sm">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4 text-blue-600">
+                  {value.icon}
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{value.title}</h3>
+                <p className="text-gray-600">{value.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-16 bg-blue-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              What Our Clients Say
+            </h2>
+            <p className="text-xl text-blue-100">
+              Real feedback from real business owners
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white rounded-xl p-8">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-gray-700 mb-6 italic">
+                  "{testimonial.quote}"
+                </p>
+                <div>
+                  <div className="font-semibold text-gray-900">{testimonial.author}</div>
+                  <div className="text-sm text-gray-600">{testimonial.role}, {testimonial.company}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Why Small Businesses Choose Us
+            </h2>
+            <p className="text-xl text-gray-600">
+              We're not just consultants—we're your partners in AI transformation
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                <CheckCircle className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Business Expertise</h3>
+              <p className="text-gray-600">
+                We understand small business challenges because we've been there.
+                Our solutions are built for your reality, not enterprise fantasies.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                <TrendingUp className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Guaranteed ROI</h3>
+              <p className="text-gray-600">
+                We're so confident in our results that we guarantee measurable ROI
+                within 6 months or refund your investment.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
+                <Users className="h-8 w-8 text-purple-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Ongoing Support</h3>
+              <p className="text-gray-600">
+                Implementation is just the beginning. We provide continuous optimization,
+                training, and support to ensure long-term success.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+const TeamPage = () => (
+  <section className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <div className="max-w-7xl mx-auto text-center">
+      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Meet Our Expert Team
+      </h2>
+      <p className="text-xl text-gray-600 mb-12">
+        Former entrepreneurs and AI researchers dedicated to your success
+      </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center">
+          <div className="bg-blue-100 rounded-full w-24 h-24 flex items-center justify-center text-blue-600 text-4xl font-bold mb-4">
+            SC
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">Sarah Chen</h3>
+          <p className="text-blue-600 font-semibold mb-2">Founder & CEO</p>
+          <p className="text-gray-600 text-sm mb-4">
+            Former Google AI researcher with 15+ years in machine learning and business automation. Led AI implementations for 500+ businesses.
+          </p>
+          <div className="flex flex-wrap justify-center gap-2">
+            <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">AI Strategy</span>
+            <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Machine Learning</span>
+            <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Business Automation</span>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center">
+          <div className="bg-blue-100 rounded-full w-24 h-24 flex items-center justify-center text-blue-600 text-4xl font-bold mb-4">
+            MR
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">Michael Rodriguez</h3>
+          <p className="text-blue-600 font-semibold mb-2">Chief Technology Officer</p>
+          <p className="text-gray-600 text-sm mb-4">
+            Ex-Microsoft engineer specializing in AI integration and scalable systems. Expert in making complex AI accessible to small businesses.
+          </p>
+          <div className="flex flex-wrap justify-center gap-2">
+            <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">AI Development</span>
+            <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">System Integration</span>
+            <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Technical Architecture</span>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center">
+          <div className="bg-blue-100 rounded-full w-24 h-24 flex items-center justify-center text-blue-600 text-4xl font-bold mb-4">
+            JP
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">Jennifer Park</h3>
+          <p className="text-blue-600 font-semibold mb-2">Head of Client Success</p>
+          <p className="text-gray-600 text-sm mb-4">
+            Former small business owner who transformed her company with AI. Now helps other businesses achieve similar success.
+          </p>
+          <div className="flex flex-wrap justify-center gap-2">
+            <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Client Relations</span>
+            <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">ROI Optimization</span>
+            <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Training & Support</span>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center">
+          <div className="bg-blue-100 rounded-full w-24 h-24 flex items-center justify-center text-blue-600 text-4xl font-bold mb-4">
+            DT
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">David Thompson</h3>
+          <p className="text-blue-600 font-semibold mb-2">Senior AI Consultant</p>
+          <p className="text-gray-600 text-sm mb-4">
+            10+ years in marketing automation and customer experience optimization. Specialist in chatbots and lead generation systems.
+          </p>
+          <div className="flex flex-wrap justify-center gap-2">
+            <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Marketing Automation</span>
+            <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Customer Experience</span>
+            <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Lead Generation</span>
+          </div>
+        </div>
       </div>
-    );
-  };
+    </div>
+  </section>
+);
+
+const ContactPage = () => (
+  <section className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 bg-white">
+    <div className="max-w-xl mx-auto bg-gray-50 rounded-xl shadow-lg p-8">
+      <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
+        Book Your Consultation
+      </h2>
+      <p className="text-center text-gray-600 mb-8">
+        Fill out the form below and we'll schedule your free consultation
+      </p>
+      <form className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Full Name *</label>
+            <input type="text" id="fullName" name="fullName" placeholder="Your full name" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address *</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="company" className="block text-sm font-medium text-gray-700">Company Name</label>
+            <input type="text" id="company" name="company" placeholder="Your company name" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="primaryInterest" className="block text-sm font-medium text-gray-700">Primary Interest *</label>
+          <select id="primaryInterest" name="primaryInterest" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option>Select service area</option>
+          </select>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="consultationType" className="block text-sm font-medium text-gray-700">Consultation Type *</label>
+            <select id="consultationType" name="consultationType" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option>Select type</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="date" className="block text-sm font-medium text-gray-700">Preferred Date *</label>
+            <input type="date" id="date" name="date" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="time" className="block text-sm font-medium text-gray-700">Preferred Time *</label>
+          <select id="time" name="time" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option>Select preferred time</option>
+          </select>
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="additionalInfo" className="block text-sm font-medium text-gray-700">Additional Information</label>
+          <textarea id="additionalInfo" name="additionalInfo" rows="4" placeholder="Tell us about your current challenges and goals..." className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+        <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+          Book Free Consultation
+        </button>
+      </form>
+    </div>
+  </section>
+);
+
+const Footer = () => (
+  <footer className="bg-gray-800 text-white py-8 px-4 sm:px-6 lg:px-8 rounded-t-xl">
+    <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
+      <div className="text-center md:text-left mb-4 md:mb-0">
+        <h3 className="text-xl font-bold">VastaAI</h3>
+        <p className="text-sm text-gray-400">© 2024 All rights reserved.</p>
+      </div>
+      <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-8">
+        <nav className="flex flex-wrap justify-center space-x-4">
+          <a href="#about" className="hover:text-blue-400 transition-colors duration-200">About</a>
+          <a href="#team" className="hover:text-blue-400 transition-colors duration-200">Team</a>
+          <a href="#contact" className="hover:text-blue-400 transition-colors duration-200">Contact</a>
+        </nav>
+        <div className="flex space-x-4">
+          <a href="#" className="hover:text-blue-400"><Users size={20} /></a>
+          <a href="#" className="hover:text-blue-400"><Briefcase size={20} /></a>
+          <a href="#" className="hover:text-blue-400"><Mail size={20} /></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+);
+
+const App = () => {
+  const [currentPage, setCurrentPage] = useState('home');
 
   const renderPage = () => {
     switch (currentPage) {
@@ -532,16 +473,37 @@ const App = () => {
         return <HomePage />;
       case 'about':
         return <AboutPage />;
-      case 'consultation':
-        return <ConsultationPage />;
-      case 'seo':
-        return <SEOPage />;
+      case 'team':
+        return <TeamPage />;
+      case 'contact':
+        return <ContactPage />;
       default:
         return <HomePage />;
     }
   };
 
-  return <Layout>{renderPage()}</Layout>;
+  return (
+    <div className="min-h-screen font-sans bg-gray-50 flex flex-col">
+      <style>
+        {`
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .animate-fade-in-up {
+            animation: fadeIn 0.8s ease-out forwards;
+          }
+          .delay-200 { animation-delay: 0.2s; }
+          .delay-400 { animation-delay: 0.4s; }
+        `}
+      </style>
+      <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <main className="flex-grow">
+        {renderPage()}
+      </main>
+      <Footer />
+    </div>
+  );
 };
 
 export default App;
