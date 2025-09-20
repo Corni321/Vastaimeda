@@ -19,7 +19,7 @@ const App = () => {
       case 'about':
         return <AboutPage />;
       case 'seo-tool':
-        return <SEOToolPage />;
+        return <SEOToolPage setCurrentPage={setCurrentPage} />;
       default:
         return <HomePage />;
     }
@@ -78,7 +78,7 @@ const HomePage = () => {
   );
 };
 
-const SEOToolPage = () => {
+const SEOToolPage = ({ setCurrentPage }) => {
   const [url, setUrl] = useState('');
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -92,7 +92,9 @@ const SEOToolPage = () => {
     setLoading(true);
     setResults(null);
 
-    // Simulate an API call with a short delay to prevent a long loading state
+    // Simulate a realistic delay between 30 and 60 seconds
+    const analysisTime = Math.random() * 30000 + 30000;
+
     setTimeout(() => {
       const mockResults = {
         title: "VastaiMedia - Your Digital Growth Partner",
@@ -102,12 +104,20 @@ const SEOToolPage = () => {
       };
       setResults(mockResults);
       setLoading(false);
-    }, 1500);
+    }, analysisTime);
   };
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-white rounded-xl shadow-lg">
-      <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">SEO Analyzer Tool</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-gray-900 text-center flex-grow">SEO Analyzer Tool</h2>
+        <button
+          onClick={() => setCurrentPage('home')}
+          className="px-4 py-2 text-gray-600 hover:text-blue-600 transition-colors duration-200"
+        >
+          <Home className="h-6 w-6" />
+        </button>
+      </div>
       <p className="text-gray-600 mb-8 text-center">
         Enter a URL to get an instant analysis of its key SEO elements.
       </p>
