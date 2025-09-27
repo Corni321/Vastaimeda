@@ -6,30 +6,38 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
+  // CRITICAL FIX: Ensure the raw JSON body is read and parsed.
+  // This step ensures the 'formData' object is correctly populated.
+  let formData;
   try {
-    // Attempt to parse the body as JSON (your original React approach)
-    let formData = req.body;
+    formData = JSON.parse(req.body);
+  } catch (e) {
+    // If it's not JSON (unlikely here), use the raw body
+    formData = req.body; 
+  }
 
-    // The server makes the call to GHL, bypassing the browser's CORS/DNS block
+  try {
+    // The server makes the call to GHL
     const ghlResponse = await fetch(GHL_WEBHOOK_URL, {
       method: 'POST',
       headers: {
-        // GHL Webhooks often prefer form-urlencoded data from server proxies
-        'Content-Type': 'application/x-www-form-urlencoded',
+        // GHL Webhooks expect form-urlencoded from the server
+        'Content-Type': 'application/x-www-form-urlencoded', 
       },
-      // Convert the JSON body back to URL-encoded form data
-      body: new URLSearchParams(formData).toString(),
+      // Convert the parsed JSON object back to a URL-encoded string
+      body: new URLSearchParams(formData).toString(), 
     });
 
     if (ghlResponse.ok) {
       return res.status(200).json({ message: 'Success! Data sent to GHL.' });
     } else {
-      // Forward the error status from GHL back to the client
+      console.error('GHL Rejection Status:', ghlResponse.status);
       const errorText = await ghlResponse.text();
+      console.error('GHL Rejection Details:', errorText);
       return res.status(ghlResponse.status).json({ message: 'GHL rejected the submission.', details: errorText });
     }
   } catch (error) {
-    console.error('Proxy Error:', error);
+    console.error('Serverless Function Error (Check Vercel Logs):', error);
     return res.status(500).json({ message: 'Serverless function failed.', error: error.message });
   }
 }
