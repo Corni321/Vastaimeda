@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 
-// This is the component for your contact form.
+// A utility function to convert your JSON state into URL-encoded form data
+const encode = (data) => {
+  return Object.keys(data)
+    .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+    .join("&");
+}
+
 const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    // NOTE: The webhook must be mapped for these keys: name, email, message
     message: '',
   });
 
@@ -22,33 +29,33 @@ const ContactForm = () => {
     e.preventDefault();
     setStatus('Sending...');
 
-    // ***************************************************************
-    // CRITICAL FIX: The old GHL Form Widget URL has been replaced with your
-    // NEW INBOUND WEBHOOK URL.
-    // ***************************************************************
+    // YOUR CORRECT GHL WEBHOOK URL
     const ghvFormUrl = 'https://services.leadconnectorhq.com/hooks/48xHGfcxw0K8oxZnHyRU/webhook-trigger/afc57720-8cf5-47a5-9e52-4e121b971331';
 
     try {
       const response = await fetch(ghvFormUrl, {
         method: 'POST',
         headers: {
-          // We keep the application/json header for modern React/Webhook submission
-          'Content-Type': 'application/json',
+          // CHANGED: Send data as Form Data (URL-encoded)
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify(formData),
+        // CHANGED: Encode the form data into a URL-encoded string
+        body: encode(formData), 
       });
 
-      // Note: A webhook often returns a non-standard response, 
-      // so checking response.ok (status 200-299) is the best check.
       if (response.ok) {
         setStatus('Success! Your message has been sent.');
         setFormData({ name: '', email: '', message: '' }); // Reset form
       } else {
-        setStatus('Error! The submission failed on the server side.');
+          // If the status is NOT okay (e.g., 400), log the response for debugging
+          console.error('Submission failed with status:', response.status);
+          const errorText = await response.text();
+          console.error('Error details:', errorText);
+        setStatus('Error! Submission rejected by GHL. Check Dev Tools Console.');
       }
     } catch (error) {
-      console.error('Submission error:', error);
-      setStatus('Error! Failed to connect to the server.');
+      console.error('Network Error:', error);
+      setStatus('Error! Failed to connect to the server. Check network connection.');
     }
   };
 
