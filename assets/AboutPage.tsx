@@ -82,12 +82,12 @@ const AboutPage = () => {
                   left behind due to cost, complexity, and lack of specialized expertise.
                 </p>
                 <p>
-                  In 2022, our founders—former Google AI researchers and successful small business 
-                  owners—decided to bridge this gap. We created the first AI consulting firm 
-                  designed exclusively for small and medium businesses.
+                  In 2023, our founders—successful small business owners—decided to bridge this gap. 
+                   We created the first AI consulting firm designed exclusively for
+                   small and medium businesses.
                 </p>
                 <p>
-                  Today, we've helped over 500 businesses implement AI solutions that deliver measurable 
+                  Today, we've helped businesses implement AI solutions that deliver measurable 
                   results. Our clients achieve an average ROI of 451% within their first year, 
                   proving that effective AI isn't just for Fortune 500 companies.
                 </p>
